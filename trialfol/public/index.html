@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Fit Connector</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 100px;
+        }
+        #connectButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Connect to Google Fit</h1>
+    <button id="connectButton">Connect to Google Fit</button>
+    <script>
+        document.getElementById('connectButton').onclick = function() {
+            window.location.href = '/auth/google'; // Redirect to Google auth
+        };
+    </script>
+</body>
+</html>

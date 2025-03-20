@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+       <style>
+        :root {
+          --primary-color: #28bf96;
+          --primary-color-dark: #209677;
+          --text-dark: #111827;
+          --text-light: #6b7280;
+          --white: #ffffff;
+        }
+        /* General container for the features */
+        .container {
+            padding: 40px;
+          
+        }
+
+        /* Feature box styles */
+        .feature-box {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            height: 200px; /* Adjust height to make the boxes square */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .feature-box:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Icon inside the feature box */
+        .feature-box .icon {
+            font-size: 40px;
+            color: #007bff;
+            margin-bottom: 15px;
+        }
+
+        /* Text and description styles */
+        .feature-box .feature-info h5 {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .feature-box .feature-info p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Make boxes responsive and adjust layout on small screens */
+        @media (max-width: 768px) {
+            .feature-box {
+                height: auto;
+            }
+        }
+        nav {
+            padding: 2rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .nav__logo {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .nav__links {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .link a {
+            text-decoration: none;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .link a:hover {
+            color: var(--primary-color);
+        }
+        /* Navigation bar styles */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        nav h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        nav .nav-links {
+            margin-top: 10px;
+        }
+
+        nav .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-right: 15px;
+            font-size: 1rem;
+        }
+
+        nav .nav-links a:hover {
+            text-decoration: underline;
+        }
+        /* General styling for the feature boxes */
+        .feature-box {
+            display: block;
+            text-decoration: none;
+            border: 2px solid #007bff; /* Highlighted border color */
+            border-radius: 15px; /* Softer rounded corners */
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(145deg, #ffffff, #f0f0f0); /* Subtle gradient */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+            color: #333; /* Neutral text color */
+            transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+            height: 250px; /* Ensures a square shape */
+            margin: 15px; /* Adds spacing between boxes */
+        }
+
+        .feature-box:hover {
+            transform: scale(1.07); /* Slightly larger on hover */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* More pronounced shadow */
+            background: linear-gradient(145deg, #e6f7ff, #ffffff); /* Light blue highlight */
+            text-decoration: none;
+        }
+
+        /* Styling for the icon */
+        .feature-box .icon {
+            font-size: 60px; /* Larger icons */
+            color: #007bff; /* Consistent branding color */
+            margin-bottom: 20px;
+        }
+
+        /* Styling for the heading */
+        .feature-box h5 {
+            font-size: 20px; /* Larger and bolder headings */
+            font-weight: 600;
+            color: #0056b3; /* Darker blue for contrast */
+            margin-bottom: 10px;
+        }
+
+        /* Styling for the paragraph */
+        .feature-box p {
+            font-size: 15px; /* Slightly larger text for readability */
+            color: #555; /* Softer gray for text */
+            line-height: 1.6; /* Better spacing between lines */
+        }
+
+        /* Ensure all boxes align in a row */
+        .row {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: space-around; /* Equal spacing between boxes */
+            align-items: center; /* Vertically aligns content */
+            gap: 20px; /* Additional spacing for modern look */
+        }
+
+        /* Adjust for smaller screens */
+        @media (max-width: 768px) {
+            .row {
+                flex-wrap: wrap;
+                justify-content: center; /* Center boxes on small screens */
+            }
+            .feature-box {
+                margin: 15px; /* Adds uniform spacing */
+            }
+        }
+
+        /* Subtle animation for icons */
+        .feature-box .icon {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .feature-box:hover .icon {
+            transform: scale(1.2); /* Slight bounce on hover */
+        }
+        
+
+       </style>  
+</head>
+<body>
+    <nav>
+        <div class="nav__logo">MedCare</div>
+        <ul class="nav__links">
+          <li class="link"><a href="/dashboard">Home</a></li>
+          <li class="link"><a href="#">About Us</a></li>
+          <li class="link"><a href="#">Courses</a></li>
+          <li class="link"><a href="#">Pages</a></li>
+          <li class="link"><a href="#">Blog</a></li>
+          <li class="link"><a href="#">Contact</a></li>
+        </ul>
+        <a href="{{ url_for('logout') }}">
+            <button style="
+              width: 90px;
+              padding: 0.7rem;
+              background-color: var(--primary-color);
+              color: var(--white);
+              font-size: 1.1rem;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+              transition: 0.3s;
+              margin-top: 10px;
+              margin-right: 50px;"
+              onmouseover="this.style.backgroundColor='var(--primary-color-dark)';"
+              onmouseout="this.style.backgroundColor='var(--primary-color)';">
+              Log Out
+            </button>
+        </a>
+     </nav>
+
+    <!-- <header>
+
+
+        <h1>Welcome to Your Health Dashboard</h1>
+        
+    </header> -->
+    
+
+        <div class="container mt-5">
+            <h2 class="text-center mb-4">Your Health Dashboard</h2>
+    
+      
+
+        
+        <div class="ffeatures">
+            
+            
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3 col-sm-6">
+                        <a href="{{ url_for('add_report') }}" class="feature-box">
+                            <div class="icon">
+                                <i class="bi-file-medical card-icon fitness-icon"></i>
+                            </div>
+                            <div class="feature-info">
+                                <h5>Review Health Reports</h5>
+                                <p>Upload Your electronic records to get a better understanding</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <a href="http://localhost:3000" class="feature-box">
+                            <div class="icon">
+                                <i class="bi-cloud-arrow-down card-icon fitness-icon"></i>
+                            </div>
+                            <div class="feature-info">
+                                <h5>Connect With GoogleFit</h5>
+                                <p>Track Your Health With Real Time Updates</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <a href="{{ url_for('chatbot') }}" class="feature-box">
+                            <div class="icon">
+                                <i class="bi bi-chat-dots"></i>
+                            </div>
+                            <div class="feature-info">
+                                <h5>Chat with Health Assistant</h5>
+                                <p>Get health advice and assistance instantly.</p>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+            
+        
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    
+    
+
+
+
+</body>
+</html>

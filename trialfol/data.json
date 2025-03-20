@@ -1,0 +1,164 @@
+{
+    "bucket": [
+      {
+        "startTimeMillis": "1731177000000",
+        "endTimeMillis": "1731181448359",
+        "dataset": [
+          {
+            "dataSourceId": "derived:com.google.step_count.delta:com.google.android.gms:aggregated",
+            "point": [
+              {
+                "startTimeNanos": "1731177000000000000",
+                "endTimeNanos": "1731178000000000000",
+                "dataTypeName": "com.google.step_count.delta",
+                "value": [
+                  {
+                    "intVal": 1500
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "dataSourceId": "derived:com.google.calories.expended:com.google.android.gms:aggregated",
+            "point": [
+              {
+                "startTimeNanos": "1731177000000000000",
+                "endTimeNanos": "1731178000000000000",
+                "dataTypeName": "com.google.calories.expended",
+                "value": [
+                  {
+                    "fpVal": 75.5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "dataSourceId": "derived:com.google.distance.delta:com.google.android.gms:aggregated",
+            "point": [
+              {
+                "startTimeNanos": "1731177000000000000",
+                "endTimeNanos": "1731178000000000000",
+                "dataTypeName": "com.google.distance.delta",
+                "value": [
+                  {
+                    "fpVal": 1200.75
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "dataSourceId": "derived:com.google.activity.summary:com.google.android.gms:aggregated",
+            "point": [
+              {
+                "startTimeNanos": "1731177000000000000",
+                "endTimeNanos": "1731178000000000000",
+                "dataTypeName": "com.google.activity.summary",
+                "value": [
+                  {
+                    "intVal": 3
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "dataSourceId": "derived:com.google.heart_rate.summary:com.google.android.gms:aggregated",
+            "point": [
+              {
+                "startTimeNanos": "1731177000000000000",
+                "endTimeNanos": "1731178000000000000",
+                "dataTypeName": "com.google.heart_rate.summary",
+                "value": [
+                  {
+                    "fpVal": 72.0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "dataSourceId": "derived:com.google.body.temperature.summary:com.google.android.gms:aggregated",
+            "point": [
+              {
+                "startTimeNanos": "1731177000000000000",
+                "endTimeNanos": "1731178000000000000",
+                "dataTypeName": "com.google.body.temperature.summary",
+                "value": [
+                  {
+                    "fpVal": 36.5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "dataSourceId": "derived:com.google.blood_pressure.summary:com.google.android.gms:aggregated",
+            "point": [
+              {
+                "startTimeNanos": "1731177000000000000",
+                "endTimeNanos": "1731178000000000000",
+                "dataTypeName": "com.google.blood_pressure.summary",
+                "value": [
+                  {
+                    "intVal": 120
+                  },
+                  {
+                    "intVal": 80
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "dataSourceId": "derived:com.google.oxygen_saturation.summary:com.google.android.gms:aggregated",
+            "point": [
+              {
+                "startTimeNanos": "1731177000000000000",
+                "endTimeNanos": "1731178000000000000",
+                "dataTypeName": "com.google.oxygen_saturation.summary",
+                "value": [
+                  {
+                    "fpVal": 98.0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "dataSourceId": "derived:com.google.nutrition.summary:com.google.android.gms:aggregated",
+            "point": [
+              {
+                "startTimeNanos": "1731177000000000000",
+                "endTimeNanos": "1731178000000000000",
+                "dataTypeName": "com.google.nutrition.summary",
+                "value": [
+                  {
+                    "fpVal": 450.0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "dataSourceId": "derived:com.google.sleep.segment:com.google.android.gms:merged",
+            "point": [
+              {
+                "startTimeNanos": "1731177000000000000",
+                "endTimeNanos": "1731178000000000000",
+                "dataTypeName": "com.google.sleep.segment",
+                "value": [
+                  {
+                    "intVal": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+  

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Fit Data Display</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .data {
+      margin: 10px 0;
+      font-size: 1.2em;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #f4f4f4;
+    }
+    .not-compatible {
+      color: gray;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Google Fit Data</h1>
+  <div id="stepCount" class="data">Step Count: --</div>
+  <div id="caloriesExpended" class="data">Calories Expended: -- kcal</div>
+  <div id="distanceWalked" class="data">Distance Walked: -- km</div>
+  <div id="activitySummary" class="data">Activity Summary: --</div>
+  <div id="heartRate" class="data">Heart Rate: <span class="not-compatible">Not Compatible</span></div>
+  <div id="bodyTemperature" class="data">Body Temperature: <span class="not-compatible">Not Compatible</span></div>
+  <div id="bloodPressure" class="data">Blood Pressure: <span class="not-compatible">Not Compatible</span></div>
+  <div id="oxygenSaturation" class="data">Oxygen Saturation: <span class="not-compatible">Not Compatible</span></div>
+  <div id="nutrition" class="data">Nutrition: <span class="not-compatible">Not Compatible</span></div>
+  <div id="sleep" class="data">Sleep: <span class="not-compatible">Not Compatible</span></div>
+
+  <script>
+    // Sample JSON data (replace with your actual API response data)
+    const googleFitData = {
+      "bucket": [
+        {
+          "startTimeMillis": "1731090600000",
+          "endTimeMillis": "1731164650965",
+          "dataset": [
+            {
+              "dataSourceId": "derived:com.google.step_count.delta:com.google.android.gms:aggregated",
+              "point": [{ "value": [{ "intVal": 8263 }] }]
+            },
+            {
+              "dataSourceId": "derived:com.google.calories.expended:com.google.android.gms:aggregated",
+              "point": [{ "value": [{ "fpVal": 1772.5 }] }]
+            },
+            {
+              "dataSourceId": "derived:com.google.distance.delta:com.google.android.gms:aggregated",
+              "point": [{ "value": [{ "fpVal": 5837.55 }] }]
+            },
+            {
+              "dataSourceId": "derived:com.google.activity.summary:com.google.android.gms:aggregated",
+              "point": [
+                {
+                  "value": [
+                    { "intVal": 7 },
+                    { "intVal": 6317890 },
+                    { "intVal": 29 }
+                  ]
+                }
+              ]
+            },
+            {
+              "dataSourceId": "derived:com.google.heart_rate.summary:com.google.android.gms:aggregated",
+              "point": []
+            },
+            {
+              "dataSourceId": "derived:com.google.body.temperature.summary:com.google.android.gms:aggregated",
+              "point": []
+            },
+            {
+              "dataSourceId": "derived:com.google.blood_pressure.summary:com.google.android.gms:aggregated",
+              "point": []
+            },
+            {
+              "dataSourceId": "derived:com.google.oxygen_saturation.summary:com.google.android.gms:aggregated",
+              "point": []
+            },
+            {
+              "dataSourceId": "derived:com.google.nutrition.summary:com.google.android.gms:aggregated",
+              "point": []
+            },
+            {
+              "dataSourceId": "derived:com.google.sleep.segment:com.google.android.gms:merged",
+              "point": []
+            }
+          ]
+        }
+      ]
+    };
+
+    // Function to display Google Fit data
+    function displayGoogleFitData(data) {
+      const bucket = data.bucket[0];
+      
+      const displayData = {
+        "stepCount": { elementId: "stepCount", text: "Step Count", default: "--" },
+        "caloriesExpended": { elementId: "caloriesExpended", text: "Calories Expended", default: "-- kcal" },
+        "distanceWalked": { elementId: "distanceWalked", text: "Distance Walked", default: "-- km" },
+        "activitySummary": { elementId: "activitySummary", text: "Activity Summary", default: "--" },
+        "heartRate": { elementId: "heartRate", text: "Heart Rate", default: "<span class='not-compatible'>Not Compatible</span>" },
+        "bodyTemperature": { elementId: "bodyTemperature", text: "Body Temperature", default: "<span class='not-compatible'>Not Compatible</span>" },
+        "bloodPressure": { elementId: "bloodPressure", text: "Blood Pressure", default: "<span class='not-compatible'>Not Compatible</span>" },
+        "oxygenSaturation": { elementId: "oxygenSaturation", text: "Oxygen Saturation", default: "<span class='not-compatible'>Not Compatible</span>" },
+        "nutrition": { elementId: "nutrition", text: "Nutrition", default: "<span class='not-compatible'>Not Compatible</span>" },
+        "sleep": { elementId: "sleep", text: "Sleep", default: "<span class='not-compatible'>Not Compatible</span>" }
+      };
+
+      bucket.dataset.forEach(dataset => {
+        const { dataSourceId, point } = dataset;
+        const value = point[0]?.value[0];
+
+        switch (dataSourceId) {
+          case "derived:com.google.step_count.delta:com.google.android.gms:aggregated":
+            document.getElementById("stepCount").textContent = `Step Count: ${value?.intVal || displayData.stepCount.default}`;
+            break;
+          case "derived:com.google.calories.expended:com.google.android.gms:aggregated":
+            document.getElementById("caloriesExpended").textContent = `Calories Expended: ${value?.fpVal.toFixed(2) || displayData.caloriesExpended.default} kcal`;
+            break;
+          case "derived:com.google.distance.delta:com.google.android.gms:aggregated":
+            document.getElementById("distanceWalked").textContent = `Distance Walked: ${(value?.fpVal / 1000).toFixed(2) || displayData.distanceWalked.default} km`;
+            break;
+          case "derived:com.google.activity.summary:com.google.android.gms:aggregated":
+            document.getElementById("activitySummary").textContent = `Activity Summary: ${value?.intVal || displayData.activitySummary.default}`;
+            break;
+          default:
+            // Handle empty or unsupported datasets
+            if (!point.length) {
+              document.getElementById(displayData[dataSourceId]?.elementId).innerHTML = displayData[dataSourceId]?.default || "<span class='not-compatible'>Not Compatible</span>";
+            }
+        }
+      });
+    }
+
+    // Initial call to display data
+    displayGoogleFitData(googleFitData);
+  </script>
+
+</body>
+</html>

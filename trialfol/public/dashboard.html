@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Fit Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #data, #history {
+            margin-top: 20px;
+        }
+        h2 {
+            color: #0073e6;
+        }
+    </style>
+</head>
+<body>
+    <h1>Google Fit Dashboard</h1>
+
+  
+
+        <h2>Steps</h2>
+        <pre id="realTimeSteps">Loading...</pre>
+
+        <h2>Calories Burned</h2>
+        <pre id="realTimeCalories">Loading...</pre>
+
+        <h2>Distance Traveled</h2>
+        <pre id="realTimeDistance">Loading...</pre>
+
+        <h2>Heart Rate</h2>
+<pre id="realTimeHeartRate">75 bpm</pre>
+
+<h2>Body Temperature</h2>
+<pre id="realTimeBodyTemperature">36.5 °C</pre>
+
+<h2>Blood Pressure</h2>
+<pre id="realTimeBloodPressure">120/80 mmHg</pre>
+
+
+<h2> Avg Sleep</h2>
+<pre id="realTimeSleep">7 hr</pre>
+    </div>
+
+    <!-- History Data Section -->
+    <!-- <div id="history">
+        <h2>History Data</h2>
+        <pre id="historyData">Loading...</pre>
+    </div> -->
+
+    <script>
+        // Helper function to convert UTC time to IST
+        function convertUTCToIST(utcTime) {
+            const utcDate = new Date(utcTime);  // Create Date object from UTC time
+            const offset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds (UTC+5:30)
+            const istDate = new Date(utcDate.getTime() + offset);  // Convert to IST
+            return istDate.toLocaleString(); // Format date to readable string in IST
+        }
+
+        // Function to fetch Google Fit data
+        async function fetchData() {
+            try {
+                const response = await fetch('/retrieve-google-fit-data');
+                const data = await response.json();
+
+                // Extract relevant information (steps, calories, distance, etc.)
+                let steps = 0;
+                let calories = 0;
+                let distance = 0;
+                let timestamp = ''; // Variable to store timestamp
+
+                // Loop through the 'bucket' to get the data
+                data.bucket.forEach(bucket => {
+                    bucket.dataset.forEach(dataset => {
+                        dataset.point.forEach(point => {
+                            point.value.forEach(value => {
+                                if (point.dataTypeName === 'com.google.step_count.delta') {
+                                    steps += value.intVal || 0;  // Add step count value
+                                }
+                                
+                                if (point.dataTypeName === 'com.google.calories.expended') {
+                                    calories += value.fpVal || 0;  // Add calories value
+                                }
+                                if (point.dataTypeName === 'com.google.distance.delta') {
+                                    distance += value.fpVal || 0;  // Add distance value in meters
+                                }
+                                
+                                // Extract timestamp from the first point (assuming points have the same timestamp)
+                                timestamp = convertUTCToIST(point.startTimeNanos / 1000000);  // Convert nanoseconds to milliseconds and then to IST
+                            });
+                        });
+                    });
+                });
+
+                // Display the data in the real-time section
+                document.getElementById('realTimeSteps').textContent = `${steps}`;
+                document.getElementById('realTimeCalories').textContent = `${calories.toFixed(2)} kcal`;
+                document.getElementById('realTimeDistance').textContent = `${distance.toFixed(2)} meters`;
+
+            } catch (error) {
+                console.error('Error fetching real-time data:', error);
+                document.getElementById('realTimeSteps').textContent = 'Failed to load steps.';
+                document.getElementById('realTimeCalories').textContent = 'Failed to load calories.';
+                document.getElementById('realTimeDistance').textContent = 'Failed to load distance.';
+            }
+        }
+
+      
+        // Fetch data every 30 seconds
+        setInterval(() => {
+            fetchData(); // Update real-time data
+// Update history data
+        }, 30000); // 30 seconds in milliseconds
+
+        // Initial data load
+        fetchData();
+   
+    </script>
+</body>
+</html>

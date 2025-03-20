@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Health Report</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
+
+        :root {
+          --primary-color: #28bf96;
+          --primary-color-dark: #209677;
+          --text-dark: #111827;
+          --text-light: #6b7280;
+          --white: #ffffff;
+        }
+
+        * {
+          padding: 0;
+          margin: 0;
+          box-sizing: border-box;
+        }
+
+        body {
+          font-family: "Roboto", sans-serif;
+          background-color: #f7f7f7;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        nav {
+            padding: 2rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .nav__logo {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .nav__links {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .link a {
+            text-decoration: none;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .link a:hover {
+            color: var(--primary-color);
+        }
+
+        section {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          max-width: 1200px;
+          width: 100%;
+          padding: 2rem;
+        }
+
+        .left-text {
+          text-align: left;
+          max-width: 50%;
+        }
+
+        .left-text h1 {
+          font-size: 3rem;
+          font-weight: 700;
+          color: var(--text-dark);
+        }
+
+        .left-text p {
+          font-size: 1.25rem;
+          color: var(--text-light);
+          margin-top: 1rem;
+          line-height: 1.75rem;
+        }
+
+        .form-box {
+          background-color: var(--white);
+          padding: 2rem;
+          border-radius: 8px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          max-width: 400px;
+          width: 100%;
+          margin-top: 80px;
+          align-items: center;
+        }
+
+        .form-value {
+          text-align: center;
+        }
+
+        .form-value h2 {
+          font-size: 2rem;
+          font-weight: 600;
+          color: var(--text-dark);
+          margin-bottom: 1.5rem;
+        }
+
+        input[type="file"] {
+          width: 100%;
+          padding: 0.8rem;
+          border: 1px solid #ddd;
+          border-radius: 5px;
+          font-size: 1rem;
+          color: var(--text-dark);
+          outline: none;
+          margin-bottom: 1rem;
+        }
+
+        input[type="file"]:focus {
+          border-color: var(--primary-color);
+        }
+      
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        nav h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        nav .nav-links {
+            margin-top: 10px;
+        }
+
+        nav .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-right: 15px;
+            font-size: 1rem;
+        }
+
+        nav .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* File input styles */
+        .file-input-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Takes up full height of viewport */
+            margin-top: 50px; /* Adjust for fixed navbar */
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        input[type="file"]:hover {
+            border-color: #333;
+        }
+
+        /* Output container styles */
+        .output-container {
+            margin: 20px auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 800px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            word-wrap: break-word;
+        }
+
+        .output-container h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #444;
+        }
+
+        .output-container p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #555;
+            margin: 0;
+        }
+
+        .output-container code {
+            display: block;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem;
+            border-radius: 5px;
+        }
+
+        button {
+          width: 100%;
+          padding: 0.7rem;
+          background-color: var(--primary-color);
+          color: var(--white);
+          font-size: 1.1rem;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          transition: 0.3s;
+          margin-top: 10px;
+        }
+
+        button:hover {
+          background-color: var(--primary-color-dark);
+        }
+
+        .back-button {
+          margin-top: 1rem;
+          padding: 0.75rem;
+          font-size: 1rem;
+          color: var(--white);
+          background-color: #2196F3;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+        }
+
+        .back-button:hover {
+          background-color: #1e88e5;
+        }
+
+        .analysis {
+          background: #fff;
+          padding: 2rem;
+          border-radius: 8px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          margin-top: 20px;
+          flex: 1;
+        }
+
+        h2 {
+          font-size: 1.5rem;
+          color: var(--text-dark);
+          margin-bottom: 1rem;
+        }
+
+        pre {
+          background: #f4f4f4;
+          padding: 1.5rem;
+          font-size: 1.1rem;
+          line-height: 1.8;
+          border-radius: 8px;
+          overflow: hidden;
+          white-space: pre-wrap;
+          word-wrap: break-word;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+          <div class="nav__logo">MedCare</div>
+          <ul class="nav__links">
+            <li class="link"><a href="/dashboard">Home</a></li>
+            <li class="link"><a href="#">About Us</a></li>
+            <li class="link"><a href="#">Courses</a></li>
+            <li class="link"><a href="#">Pages</a></li>
+            <li class="link"><a href="#">Blog</a></li>
+            <li class="link"><a href="#">Contact</a></li>
+          </ul>
+          <a href="{{ url_for('logout') }}"><button class="btn">Log Out</button></a>
+        </nav>
+    <div class="content">
+        <h1>Upload Health Report</h1>
+        <div class="form-box">
+            <form action="{{ url_for('add_report') }}" method="POST" enctype="multipart/form-data">
+                <label for="report">Choose a health report to upload:</label>
+                <input type="file" name="report" id="report" accept="image/*,.pdf,.doc,.docx" required>
+                <button type="submit">Upload Report</button>
+            </form>
+        </div>
+    </div>
+
+    {% if analysis %}
+        <div class="analysis">
+            <h2>Extract from Report:</h2>
+            <pre>{{ analysis }}</pre>
+        </div>
+    {% endif %}
+</body>
+</html>
