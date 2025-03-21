@@ -2,20 +2,23 @@ import os
 import fitz  # PyMuPDF for PDFs
 import tempfile
 from PIL import Image
-import pytesseract
 import docx
 from langchain_groq import ChatGroq
 from langchain.prompts import ChatPromptTemplate
 from langchain.schema.output_parser import StrOutputParser
 import logging
 from pymongo import MongoClient
+import pytesseract
+
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Initialize the language model
 llm = ChatGroq(
-    groq_api_key='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',  # Replace with your actual API key
+    groq_api_key='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',  # Replace with your actual API key
+    model_name = "llama-3.3-70b-specdec",
     temperature=0.2,
     max_tokens=3000,
     model_kwargs={"top_p": 1}
@@ -24,28 +27,38 @@ llm = ChatGroq(
 # Define the chat prompt template
 template = """
 <|context|>
-You are a professional data analyst. Analyze the provided report text. Provide:
-1. Key insights and patterns from the report data.
-2. Recommendations based on the report and the trends in the  data.
-3. Highlight any important observations or trends.
+You are a medical AI that helps users find online purchase links for their prescribed medications. 
+
+Your task:
+1. Extract the **medication names** from the uploaded prescription.
+2. Search for **reliable online pharmacy links** (example: 1mg, Netmeds, PharmEasy).
+3. Present the medications **along with their links** in a **simple format**.
+4. If a medication is not found, suggest an alternative brand.
+
 </s>
 <|user|>
-Report data: 
+Prescription data: 
 {report_text}
-
 
 </s>
 <|assistant|>
 """
 
+
+
 prompt = ChatPromptTemplate.from_template(template)
 
     # Function to pass text to LLM for analysis
+def format_response_with_links(response_text):
+    response_text = response_text.replace("https://", '<a href="https://').replace("\n", '">\n').replace(" ", '" target="_blank">')  
+    return response_text
+
 def analyze_text_with_llm(report_text):
     try:
         # Format the prompt
         formatted_prompt = prompt.format(report_text=report_text)
         # Directly pass formatted prompt to LLM (without using to_input_dict)
+        logging.info(f"Formatted Prompt Sent to LLM: {formatted_prompt}")
         response = llm.invoke(formatted_prompt)
         return response
     except Exception as e:

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_pymongo import PyMongo
-from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 import os
 from services import ocr_service
 
@@ -79,17 +79,18 @@ def dashboard():
 
 # Initialize embeddings and vector store
 embeddings = HuggingFaceEmbeddings(model_name="NeuML/pubmedbert-base-embeddings")
-vectorstore_file = "vectorstore_med_part2.index"
+vectorstore_file = "vectorstoreexample.index"
 if os.path.exists(vectorstore_file):
     logging.info("Loading existing vector store...")
-    vectorstore = FAISS.load_local(vectorstore_file, embeddings, allow_dangerous_deserialization=True)
+    vectorstore = FAISS.load_local(vectorstore_file, embeddings, index_name="index",allow_dangerous_deserialization=True)
     retriever = vectorstore.as_retriever(search_kwargs={'k': 5})
 else:
     logging.error("Vector store file does not exist.")
 
 # Initialize the language model
 llm = ChatGroq(
-    groq_api_key='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',
+    groq_api_key='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',
+    model_name = "llama-3.3-70b-specdec",
     temperature=0.2,
     max_tokens=3000,
     model_kwargs={"top_p": 1}
@@ -107,11 +108,12 @@ Responsibilities:
 - Share tips for maintaining a healthy lifestyle based on data and symptom analysis.
 
 Formatting Guidelines:
-- Provide responses in a proper format with clear spacing and indentations.
-- Use separate lines for each point or suggestion to improve readability.
-- Avoid presenting multiple points on the same line.
-- Keep the language simple and empathetic while maintaining professionalism.
-- Ensure the conversation is concise but sufficiently detailed to address the query effectively.
+- Do NOT use markdown (`###`, `**bold**`, `- bullet points`, etc.).  
+- Provide responses in a clear and natural language without markdown formatting.  
+- Present information in full sentences rather than structured lists or bullet points.  
+- Maintain proper spacing to ensure readability while keeping the response conversational.  
+- Avoid using headings, numbered points, or bold text. Keep it natural and flowing.  
+- Ensure responses are empathetic, concise, and informative, similar to how a doctor would explain to a patient.  
 
 </s>
 <|user|>
@@ -133,12 +135,27 @@ rag_chain = (
 from langchain_core.messages import AIMessage
 
 # Define the response function
+import re
+
+def clean_text(response):
+    """Remove markdown-style formatting from the response."""
+    response = re.sub(r'#+\s*', '', response)  # Remove headings (###, ##, #)
+    response = re.sub(r'\*\*(.*?)\*\*', r'\1', response)  # Remove bold (**text**)
+    response = re.sub(r'-\s+', '', response)  # Remove bullet points
+    response = response.replace("\n", " ")  # Convert new lines to spaces
+    return response.strip()
+
 def get_response(user_input,conversation_context):
     logging.info(f"Getting response for user input: {user_input}")
     try:
+        max_tokens = 5000  # Set a safe limit within Groq API's 6000-token max
+        conversation_history = conversation_context.split()  # Split into words
+        if len(conversation_history) > max_tokens:
+            conversation_context = " ".join(conversation_history[-max_tokens:])
         full_prompt = "Chat History: " + conversation_context + " User Input: " + user_input
 
         result = rag_chain.invoke(full_prompt)
+        result = clean_text(result)
         time.sleep(1)  # Simulate processing delay
         return result
     except Exception as e:
@@ -180,6 +197,8 @@ def chatbot():
 @app.route('/ask', methods=['POST'])
 def ask():
     user_input = request.form['user_input']  # Get user input from form
+    user_input = user_input[:500]  # Limit to 500 characters
+
     user_id = session.get('user_id')  # Assuming user_id is stored in the session after login
 
     if not user_id:
@@ -199,9 +218,10 @@ def ask():
 
     # Get response
     response = get_response(user_input, conversation_context)
-    
+    clean_response = response.replace('"', '').strip()
+
     # Append the chatbot's response to the history
-    chat_record['history'].append({'bot': response})
+    chat_record['history'].append({'bot': clean_response})
 
     # Update the chat history in the database
     chat_history_collection.update_one(
@@ -209,7 +229,7 @@ def ask():
         {'$set': {'history': chat_record['history']}}
     )
 
-    return jsonify({'response': response})
+    return jsonify({'response': clean_response})
 
 @app.route('/history', methods=['GET'])
 def chat_history():

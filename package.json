@@ -2,7 +2,8 @@
   "name": "medcare",
   "version": "1.0.0",
   "scripts": {
-"start": "concurrently \"cd C:\\Users\\venka\\Desktop\\doctorproj\\ && python app.py\" \"cd C:\\Users\\venka\\Desktop\\doctorproj\\trialfol && node server.js\" "
+"start": "concurrently \"cd C:\\Users\\prani\\OneDrive\\Documents\\doctorproj_bkp\\doctorproj && python app.py\" \"cd C:\\Users\\prani\\OneDrive\\Documents\\doctorproj_bkp\\doctorproj\\trialfol && node server.js\" "
+
   },
   "dependencies": {
     "axios": "^1.7.7",
