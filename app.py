@@ -300,6 +300,6 @@ def logout():
     # Redirect to login page (adjust the route as per your app's login page)
     return redirect('/')
 
-if __name__ == '__main__':
-
-    app.run(debug=False)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))  # Default port 10000 if PORT is not set
+    app.run(host="0.0.0.0", port=port)
